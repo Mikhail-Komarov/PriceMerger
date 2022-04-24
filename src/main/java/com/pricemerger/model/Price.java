@@ -23,6 +23,17 @@ public class Price {
         this.marking = productCode+number+depart;
     }
 
+    public Price (Price duplicate) {
+        this.id = duplicate.id;
+        this.productCode = duplicate.productCode;
+        this.number = duplicate.number;
+        this.depart = duplicate.depart;
+        this.begin = duplicate.begin;
+        this.end = duplicate.end;
+        this.value = duplicate.value;
+        this.marking = duplicate.productCode+duplicate.number+duplicate.depart;
+    }
+
     public Price() {
     }
 
