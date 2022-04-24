@@ -11,6 +11,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PriceMergerFifthTest {
+    /**
+     * Метод возвращает список имеющихся цен
+     *
+     * @return список имеющихся цен
+     */
     private static ArrayList<Price> getOldPrices() {
         ArrayList<Price> oldPrices = new ArrayList<>();
         oldPrices.add(new Price(1, "1", 1, 1,
@@ -25,6 +30,11 @@ public class PriceMergerFifthTest {
         return oldPrices;
     }
 
+    /**
+     * Метод возвращает список новых цен на основании которых будет производиться обновление
+     *
+     * @return список новых цен
+     */
     private static ArrayList<Price> getNewPrices() {
         ArrayList<Price> newPrices = new ArrayList<>();
         newPrices.add(new Price(4, "1", 1, 1,
@@ -39,6 +49,11 @@ public class PriceMergerFifthTest {
         return newPrices;
     }
 
+    /**
+     * Метод возвращает ожидаемый результат объединения цен
+     *
+     * @return список обновленных цен
+     */
     private static ArrayList<Price> getExpected() {
         ArrayList<Price> expected = new ArrayList<>();
         expected.add(new Price(1, "1", 1, 1,
@@ -62,6 +77,11 @@ public class PriceMergerFifthTest {
         return expected;
     }
 
+    /**
+     * Список имеющихся цен
+     * Список новых цен
+     * Ожидаемый результат ? результат
+     */
     @Test
     public void testCaseOne() {
         PriceMergerService priceMergerService = new PriceMergerService();

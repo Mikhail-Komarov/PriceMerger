@@ -9,6 +9,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PriceMergerService {
+
+    /**
+     * Метод возвращает список обновленных цен
+     *
+     * @param oldPrices список имеющихся цен
+     * @param newPrices список новых цен
+     * @return список обновленных цен
+     */
     public List<Price> updatePrices(ArrayList<Price> oldPrices, ArrayList<Price> newPrices) {
         Map<String, List<Price>> oldSortedPrices = getSortedPricesByMarking(oldPrices);
         Map<String, List<Price>> newSortedPrices = getSortedPricesByMarking(newPrices);
@@ -18,10 +26,24 @@ public class PriceMergerService {
         return updatedPrices;
     }
 
+    /**
+     * Метод возвращает map заполненную на основании списка,
+     * где ключ это (код товара + номер цены + номер отдела), а занчение это список цен
+     *
+     * @param prices список цен
+     * @return Map<String, List < Price>>
+     */
     public Map<String, List<Price>> getSortedPricesByMarking(List<Price> prices) {
         return prices.stream().collect(Collectors.groupingBy(Price::getMarking));
     }
 
+    /**
+     * Метод возвращает map c обновленными ценами
+     *
+     * @param updatablePrices map с имеющимися ценами
+     * @param newPrices       map с новыми ценами
+     * @return Map<String, List < Price>> с обновленными ценами
+     */
     public Map<String, List<Price>> getUpdatedPrices(Map<String, List<Price>> updatablePrices,
                                                      Map<String, List<Price>> newPrices) {
         Map<String, List<Price>> updatedPrices = new HashMap<>(updatablePrices);
@@ -37,6 +59,13 @@ public class PriceMergerService {
         return updatedPrices;
     }
 
+    /**
+     * Метод возвращает список обновленных цен
+     *
+     * @param oldPriceList список имеющихся цен
+     * @param newPriceList список новых цен
+     * @return список обновленных цен
+     */
     public List<Price> getMergedPrices(List<Price> oldPriceList, List<Price> newPriceList) {
         List<Price> mergePrices = new ArrayList<>();
         List<Price> removePriseList = new ArrayList<>();
