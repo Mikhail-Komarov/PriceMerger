@@ -69,52 +69,72 @@ public class PriceMergerService {
     public List<Price> getMergedPrices(List<Price> oldPriceList, List<Price> newPriceList) {
         List<Price> mergePrices = new ArrayList<>();
         List<Price> removePriseList = new ArrayList<>();
-        boolean updateIsExist = true;
-        while (updateIsExist) {
+        boolean updateExists = true;
+        while (updateExists) {
             if (!removePriseList.isEmpty()) {
                 newPriceList.removeAll(removePriseList);
                 oldPriceList.removeAll(removePriseList);
                 removePriseList.clear();
             }
-            updateIsExist = false;
+            updateExists = false;
             for (Price oldPrice : oldPriceList) {
                 for (Price newPrice : newPriceList) {
-                    if (oldPrice.getValue() == newPrice.getValue()) {
-                        oldPrice.setEnd(newPrice.getEnd());
-                        oldPrice.setBegin(newPrice.getBegin());
-                        mergePrices.add(oldPrice);
-                        removePriseList.add(newPrice);
+                    Price price = new Price(oldPrice);
+                    if (oldPrice.getValue() == newPrice.getValue()
+                            && newPrice.getBegin().isAfter(oldPrice.getBegin())
+                            && newPrice.getBegin().isBefore(oldPrice.getEnd())
+                            && newPrice.getEnd().isAfter(oldPrice.getEnd())) {
+                        price.setEnd(newPrice.getEnd());
+                        mergePrices.add(price);
                         removePriseList.add(oldPrice);
-                        updateIsExist = true;
+                        removePriseList.add(newPrice);
+                        updateExists = true;
+                    } else if (oldPrice.getValue() == newPrice.getValue()
+                            && newPrice.getEnd().isBefore(oldPrice.getEnd())
+                            && newPrice.getEnd().isAfter(oldPrice.getBegin())
+                            && newPrice.getBegin().isBefore(oldPrice.getBegin())) {
+                        price.setBegin(newPrice.getBegin());
+                        mergePrices.add(price);
+                        removePriseList.add(oldPrice);
+                        removePriseList.add(newPrice);
+                        updateExists = true;
+                    } else if (oldPrice.getValue() == newPrice.getValue()
+                            && !(newPrice.getEnd().isAfter(oldPrice.getEnd()))
+                            && newPrice.getEnd().isAfter(oldPrice.getBegin())
+                            && newPrice.getBegin().isAfter(oldPrice.getBegin())
+                            && newPrice.getBegin().isBefore(oldPrice.getEnd())) {
+                        removePriseList.add(newPrice);
+                        updateExists = true;
                     } else if (newPrice.getBegin().isAfter(oldPrice.getBegin())
                             && newPrice.getBegin().isBefore(oldPrice.getEnd())
                             && newPrice.getEnd().isAfter(oldPrice.getEnd())) {
-                        oldPrice.setEnd(newPrice.getBegin());
-                        mergePrices.add(oldPrice);
+                        price.setEnd(newPrice.getBegin());
+                        mergePrices.add(price);
                         removePriseList.add(oldPrice);
-                        updateIsExist = true;
+                        removePriseList.add(oldPrice);
+                        updateExists = true;
                     } else if (newPrice.getEnd().isBefore(oldPrice.getEnd())
                             && newPrice.getEnd().isAfter(oldPrice.getBegin())
                             && newPrice.getBegin().isBefore(oldPrice.getBegin())) {
-                        oldPrice.setBegin(newPrice.getEnd());
-                        mergePrices.add(oldPrice);
+                        price.setBegin(newPrice.getEnd());
+                        mergePrices.add(price);
                         removePriseList.add(oldPrice);
-                        updateIsExist = true;
+                        updateExists = true;
                     } else if (newPrice.getEnd().isBefore(oldPrice.getEnd())
                             && newPrice.getEnd().isAfter(oldPrice.getBegin())
                             && newPrice.getBegin().isAfter(oldPrice.getBegin())
                             && newPrice.getBegin().isBefore(oldPrice.getEnd())) {
-                        Price price = new Price(oldPrice);
                         price.setBegin(newPrice.getEnd());
                         mergePrices.add(price);
-                        oldPrice.setEnd(newPrice.getBegin());
-                        mergePrices.add(oldPrice);
+                        Price duplicatePrice = new Price(oldPrice);
+                        duplicatePrice.setEnd(newPrice.getBegin());
+                        mergePrices.add(duplicatePrice);
                         removePriseList.add(oldPrice);
-                        updateIsExist = true;
+                        updateExists = true;
                     } else if (!newPrice.getBegin().isAfter(oldPrice.getBegin())
                             && !newPrice.getEnd().isBefore(oldPrice.getEnd())) {
                         removePriseList.add(oldPrice);
-                        updateIsExist = true;
+                        updateExists = true;
                     }
                 }
             }

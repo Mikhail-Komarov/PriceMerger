@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PriceMergerFourthTest {
+public class PriceMergerSeventhTest {
     /**
      * Метод возвращает список имеющихся цен
      *
@@ -21,13 +21,10 @@ public class PriceMergerFourthTest {
         ArrayList<Price> oldPrices = new ArrayList<>();
         oldPrices.add(new Price(1, "1", 1, 1,
                 LocalDateTime.of(2022, 1, 1, 0, 0),
-                LocalDateTime.of(2022, 3, 31, 0, 0), 1));
+                LocalDateTime.of(2022, 7, 1, 0, 0), 1));
         oldPrices.add(new Price(2, "1", 1, 1,
-                LocalDateTime.of(2022, 4, 1, 0, 0),
-                LocalDateTime.of(2022, 8, 31, 0, 0), 2));
-        oldPrices.add(new Price(3, "1", 1, 1,
-                LocalDateTime.of(2022, 9, 1, 0, 0),
-                LocalDateTime.of(2022, 11, 30, 0, 0), 3));
+                LocalDateTime.of(2022, 7, 1, 0, 0),
+                LocalDateTime.of(2022, 10, 1, 0, 0), 2));
         return oldPrices;
     }
 
@@ -38,9 +35,9 @@ public class PriceMergerFourthTest {
      */
     private static ArrayList<Price> getNewPrices() {
         ArrayList<Price> newPrices = new ArrayList<>();
-        newPrices.add(new Price(4, "1", 1, 1,
-                LocalDateTime.of(2022, 4, 1, 0, 0),
-                LocalDateTime.of(2022, 8, 31, 0, 0), 4));
+        newPrices.add(new Price(3, "1", 1, 1,
+                LocalDateTime.of(2022, 10, 1, 0, 0),
+                LocalDateTime.of(2022, 12, 15, 0, 0), 3));
         return newPrices;
     }
 
@@ -53,20 +50,19 @@ public class PriceMergerFourthTest {
         ArrayList<Price> expected = new ArrayList<>();
         expected.add(new Price(1, "1", 1, 1,
                 LocalDateTime.of(2022, 1, 1, 0, 0),
-                LocalDateTime.of(2022, 3, 31, 0, 0), 1));
+                LocalDateTime.of(2022, 7, 1, 0, 0), 1));
+        expected.add(new Price(2, "1", 1, 1,
+                LocalDateTime.of(2022, 7, 1, 0, 0),
+                LocalDateTime.of(2022, 10, 1, 0, 0), 2));
         expected.add(new Price(3, "1", 1, 1,
-                LocalDateTime.of(2022, 9, 1, 0, 0),
-                LocalDateTime.of(2022, 11, 30, 0, 0), 3));
-        expected.add(new Price(4, "1", 1, 1,
-                LocalDateTime.of(2022, 4, 1, 0, 0),
-                LocalDateTime.of(2022, 8, 31, 0, 0), 4));
+                LocalDateTime.of(2022, 10, 1, 0, 0),
+                LocalDateTime.of(2022, 12, 15, 0, 0), 3));
         return expected;
     }
 
     /**
      * Тестовый сценарий, согласно которому к списку имеющихся цен добавляется список новых,
-     * цена из имеющегося списка цен пересекается в периоде действия с ценой из нового,
-     * при этом дата начала и дата окончания новой цены равны дате начала и дате окончания имеющейся, а значение отличается.
+     * при этом цены из имеющегося списка цен не пересекается в периоде действия с ценами из нового
      */
     @Test
     public void test() {
@@ -82,4 +78,3 @@ public class PriceMergerFourthTest {
         Assert.assertEquals(expectedResult, updatedPrices);
     }
 }
-

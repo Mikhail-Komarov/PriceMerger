@@ -2,6 +2,7 @@ package com.pricemerger;
 
 import com.pricemerger.model.Price;
 import com.pricemerger.service.PriceMergerService;
+import com.pricemerger.service.PriceVisualiser;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -78,17 +79,28 @@ public class PriceMergerFifthTest {
     }
 
     /**
-     * Список имеющихся цен
-     * Список новых цен
-     * Ожидаемый результат ? результат
+     * Тестовый сценарий, согласно которому к списку имеющихся цен добавляется список новых, при этом осуществляются следующие пересечения:
+     * - цена из имеющегося списка цен пересекается в периоде действия с ценой из нового,
+     * при этом дата начала и дата окончания новой цены находятся между датой начала и датой окончания имеющейся, а значение отличается;
+     *
+     * - цена из имеющегося списка цен пересекается в периоде действия с ценой из нового, при этом дата начала новой цены находится
+     * между датой начала и датой окончания имеющейся, дата окончания новой цены позже даты окончания имеющейся, а значение отличается;
+     *
+     * - цена из имеющегося списка цен пересекается в периоде действия с ценой из нового, при этом дата начала у имеющейся и новой цены совпадает, а дата окончания
+     * новой цены позже даты окончания имеющейся, а значение отличается.
+     *
      */
     @Test
-    public void testCaseOne() {
+    public void test() {
         PriceMergerService priceMergerService = new PriceMergerService();
-        List<Price> updatedPrices = priceMergerService.updatePrices(getOldPrices(), getNewPrices());
-        List<String> result = updatedPrices.stream().map(Price::toString).sorted().collect(Collectors.toList());
-        List<String> expectedResult = getExpected().stream().map(Price::toString).sorted().collect(Collectors.toList());
-        Assert.assertEquals(expectedResult, result);
+        ArrayList<Price> oldPrices = getOldPrices();
+        ArrayList<Price> newPrices = getNewPrices();
+        List<Price> updatedPrices = priceMergerService.updatePrices(oldPrices, newPrices).stream().sorted().collect(Collectors.toList());
+        PriceVisualiser priceVisualiser = new PriceVisualiser();
+        System.out.println(priceVisualiser.getVisualisation(oldPrices, PriceVisualiser.Step.OLD));
+        System.out.println(priceVisualiser.getVisualisation(newPrices, PriceVisualiser.Step.NEW));
+        System.out.println(priceVisualiser.getVisualisation(updatedPrices, PriceVisualiser.Step.RESULT));
+        List<Price> expectedResult = getExpected().stream().sorted().collect(Collectors.toList());
+        Assert.assertEquals(expectedResult, updatedPrices);
     }
 }
-
